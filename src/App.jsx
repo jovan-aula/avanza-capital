@@ -6,7 +6,7 @@ const G = {
   muted:"rgba(255,255,255,0.55)", dim:"rgba(255,255,255,0.28)",
 };
 const CALS = { ensenada:"oDvq85E6GQzcnFCjk4nD", tijuana:"VVbuahuUue9CU9MvtlyT" };
-const MAX_PTS = 30, PASS = 16, VOICE_SECS = 27;
+const MAX_PTS = 30, PASS = 16, VOICE_SECS = 33;
 
 const IMG_URLS = {
   logo:     "https://assets.cdn.filesafe.space/xN1nux9vFTvdqmjYzRmQ/media/67a95d7d9769a703fa631ba9.png",
