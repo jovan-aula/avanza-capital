@@ -14,7 +14,7 @@ const IMG_URLS = {
   thumbsup: "https://assets.cdn.filesafe.space/xN1nux9vFTvdqmjYzRmQ/media/69d314da84c045c2747cda57.png",
 };
 const AUDIO_RING  = "https://assets.cdn.filesafe.space/xN1nux9vFTvdqmjYzRmQ/media/69d333fcfa2dde97426ac5ea.mp3";
-const AUDIO_VOICE = "https://assets.cdn.filesafe.space/xN1nux9vFTvdqmjYzRmQ/media/69d333fce19ba668288379de.mp3";
+const AUDIO_VOICE = "https://assets.cdn.filesafe.space/xN1nux9vFTvdqmjYzRmQ/media/69d336c8fa2dde97426b1cdd.mp3";
 
 function useImages() {
   const [imgs, setImgs] = useState({});
@@ -95,6 +95,66 @@ function CircleProgress({ progress, size=160, stroke=4, img }) {
           ? <img src={img} alt="Mr. Mike" style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top center"}}/>
           : <div style={{fontSize:50}}>👋</div>
         }
+      </div>
+    </div>
+  );
+}
+
+/* ── TAP TO START ── */
+function TapToStart({ imgs, onStart }) {
+  return (
+    <div onClick={onStart} style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:G.bg,padding:"30px 24px",cursor:"pointer",position:"relative",overflow:"hidden"}}>
+      <style>{`
+        @keyframes ping{0%{transform:scale(1);opacity:0.5}100%{transform:scale(2.2);opacity:0}}
+        @keyframes blink{0%,100%{opacity:1}50%{opacity:0.25}}
+        @keyframes fadeUp{0%{opacity:0;transform:translateY(18px)}100%{opacity:1;transform:translateY(0)}}
+      `}</style>
+
+      {/* Ambient glow */}
+      <div style={{position:"absolute",width:400,height:400,borderRadius:"50%",background:`radial-gradient(circle,${O},transparent 70%)`,opacity:0.08,filter:"blur(80px)",top:-100,right:-80,pointerEvents:"none"}}/>
+      <div style={{position:"absolute",width:350,height:350,borderRadius:"50%",background:`radial-gradient(circle,${B},transparent 70%)`,opacity:0.12,filter:"blur(80px)",bottom:-80,left:-60,pointerEvents:"none"}}/>
+
+      {/* Logo */}
+      <div style={{position:"absolute",top:24,left:0,right:0,display:"flex",justifyContent:"center"}}>
+        <Logo src={imgs.logo}/>
+      </div>
+
+      <div style={{textAlign:"center",animation:"fadeUp 0.8s ease both"}}>
+        {/* Mr. Mike */}
+        <div style={{position:"relative",width:120,height:120,margin:"0 auto 32px",display:"flex",alignItems:"center",justifyContent:"center"}}>
+          {[1,2].map(i=>(
+            <div key={i} style={{position:"absolute",inset:-i*18,borderRadius:"50%",border:`1.5px solid rgba(242,101,34,${0.22-i*0.07})`,animation:`ping ${1.6+i*0.5}s ease-out ${i*0.35}s infinite`}}/>
+          ))}
+          <div style={{width:120,height:120,borderRadius:"50%",overflow:"hidden",border:`3px solid ${O}`,boxShadow:`0 0 28px rgba(242,101,34,0.35)`,background:B,position:"relative",zIndex:1}}>
+            {imgs.wave
+              ? <img src={imgs.wave} alt="Mr. Mike" style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top center"}}/>
+              : <div style={{fontSize:50,display:"flex",alignItems:"center",justifyContent:"center",height:"100%"}}>👋</div>
+            }
+          </div>
+        </div>
+
+        {/* Main copy */}
+        <p style={{fontSize:15,color:G.muted,lineHeight:1.8,marginBottom:10,fontStyle:"italic",animation:"fadeUp 0.9s ease 0.1s both"}}>
+          Algunas decisiones cambian todo.<br/>
+          <span style={{color:"white",fontWeight:600,fontStyle:"normal"}}>Esta puede ser una de ellas.</span>
+        </p>
+
+        <h1 style={{fontSize:"clamp(28px,7vw,42px)",fontWeight:900,letterSpacing:"-1px",lineHeight:1.05,marginBottom:36,animation:"fadeUp 1s ease 0.2s both"}}>
+          SÉ{" "}
+          <span style={{background:`linear-gradient(135deg,${O},${OL})`,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>
+            AGENTE GNP
+          </span>
+        </h1>
+
+        {/* CTA */}
+        <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:12,animation:"fadeUp 1.1s ease 0.3s both"}}>
+          <div style={{width:64,height:64,borderRadius:"50%",background:`linear-gradient(135deg,${O},#C44D10)`,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:`0 0 28px rgba(242,101,34,0.45)`}}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
+          </div>
+          <span style={{fontSize:13,fontWeight:600,color:G.dim,letterSpacing:"0.5px",animation:"blink 1.8s ease infinite"}}>
+            ¡Toca para comenzar!
+          </span>
+        </div>
       </div>
     </div>
   );
@@ -454,7 +514,7 @@ function Result({ qResult, city, pct, imgs }) {
 /* ── Main ── */
 export default function App() {
   const imgs = useImages();
-  const [phase,       setPhase]       = useState("call");
+  const [phase, setPhase] = useState("tap");
   const [step,        setStep]        = useState(0);
   const [score,       setScore]       = useState(0);
   const [city,        setCity]        = useState("tijuana");
@@ -488,7 +548,8 @@ export default function App() {
 
   const afterTestimonial = () => { fade(() => { setTestimonial(null); setStep(nextStep); setPhase("quiz"); }); };
 
-  if (phase === "call") return <IncomingCall imgs={imgs} onDone={() => fade(() => setPhase("hero"))}/>;
+  if (phase==="tap")  return <TapToStart imgs={imgs} onStart={()=>setPhase("call")}/>;
+  if (phase==="call") return <IncomingCall imgs={imgs} onDone={()=>fade(()=>setPhase("hero"))}/>;
 
   return (
     <div style={{minHeight:"100vh",background:G.bg,color:"white",fontFamily:"'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",position:"relative",overflow:"hidden"}}>
