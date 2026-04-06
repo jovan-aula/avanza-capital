@@ -14,7 +14,7 @@ const IMG_URLS = {
   thumbsup: "https://assets.cdn.filesafe.space/xN1nux9vFTvdqmjYzRmQ/media/69d314da84c045c2747cda57.png",
 };
 const AUDIO_RING  = "https://assets.cdn.filesafe.space/xN1nux9vFTvdqmjYzRmQ/media/69d333fcfa2dde97426ac5ea.mp3";
-const AUDIO_VOICE = "https://assets.cdn.filesafe.space/xN1nux9vFTvdqmjYzRmQ/media/69d336c8fa2dde97426b1cdd.mp3";
+const AUDIO_VOICE = "https://assets.cdn.filesafe.space/xN1nux9vFTvdqmjYzRmQ/media/69d33bc4d8c7fd2a200b002e.mp3";
 
 function useImages() {
   const [imgs, setImgs] = useState({});
@@ -116,8 +116,7 @@ function TapToStart({ imgs, onStart }) {
       <div style={{position:"absolute",width:450,height:450,borderRadius:"50%",background:`radial-gradient(circle,${B},transparent 65%)`,opacity:0.18,filter:"blur(70px)",bottom:-120,left:-80,pointerEvents:"none"}}/>
       <div style={{position:"absolute",width:300,height:300,borderRadius:"50%",background:`radial-gradient(circle,${O},transparent 65%)`,opacity:0.07,filter:"blur(60px)",bottom:80,right:40,pointerEvents:"none"}}/>
 
-      {/* Horizontal light streak */}
-      <div style={{position:"absolute",top:"38%",left:0,right:0,height:1,background:`linear-gradient(90deg,transparent,rgba(242,101,34,0.25),transparent)`,pointerEvents:"none"}}/>
+      {/* No horizontal streak */}
 
       {/* Logo */}
       <div style={{position:"absolute",top:24,left:0,right:0,display:"flex",justifyContent:"center"}}>
@@ -130,7 +129,7 @@ function TapToStart({ imgs, onStart }) {
           {[1,2,3].map(i=>(
             <div key={i} style={{position:"absolute",inset:-i*16,borderRadius:"50%",border:`1px solid rgba(242,101,34,${0.25-i*0.06})`,animation:`ping ${1.5+i*0.5}s ease-out ${i*0.3}s infinite`}}/>
           ))}
-          {/* Rotating arc */}
+      {/* Rotating arc - back */}
           <svg style={{position:"absolute",inset:-8,animation:"rotateSlow 4s linear infinite"}} width={146} height={146} viewBox="0 0 146 146">
             <circle cx="73" cy="73" r="68" fill="none" stroke={`url(#arcGrad)`} strokeWidth="1.5" strokeDasharray="120 320" strokeLinecap="round"/>
             <defs>
