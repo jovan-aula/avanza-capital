@@ -100,32 +100,48 @@ function CircleProgress({ progress, size=160, stroke=4, img }) {
   );
 }
 
-/* ── TAP TO START ── */
 function TapToStart({ imgs, onStart }) {
   return (
-    <div onClick={onStart} style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:G.bg,padding:"30px 24px",cursor:"pointer",position:"relative",overflow:"hidden"}}>
+    <div onClick={onStart} style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"#04040A",padding:"30px 24px",cursor:"pointer",position:"relative",overflow:"hidden"}}>
       <style>{`
         @keyframes ping{0%{transform:scale(1);opacity:0.5}100%{transform:scale(2.2);opacity:0}}
-        @keyframes blink{0%,100%{opacity:1}50%{opacity:0.25}}
+        @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
         @keyframes fadeUp{0%{opacity:0;transform:translateY(18px)}100%{opacity:1;transform:translateY(0)}}
+        @keyframes rotateSlow{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+        @keyframes shimmer{0%{opacity:0.4}50%{opacity:1}100%{opacity:0.4}}
       `}</style>
 
-      {/* Ambient glow */}
-      <div style={{position:"absolute",width:400,height:400,borderRadius:"50%",background:`radial-gradient(circle,${O},transparent 70%)`,opacity:0.08,filter:"blur(80px)",top:-100,right:-80,pointerEvents:"none"}}/>
-      <div style={{position:"absolute",width:350,height:350,borderRadius:"50%",background:`radial-gradient(circle,${B},transparent 70%)`,opacity:0.12,filter:"blur(80px)",bottom:-80,left:-60,pointerEvents:"none"}}/>
+      {/* Background glows */}
+      <div style={{position:"absolute",width:500,height:500,borderRadius:"50%",background:`radial-gradient(circle,${O},transparent 65%)`,opacity:0.13,filter:"blur(70px)",top:-150,right:-100,pointerEvents:"none"}}/>
+      <div style={{position:"absolute",width:450,height:450,borderRadius:"50%",background:`radial-gradient(circle,${B},transparent 65%)`,opacity:0.18,filter:"blur(70px)",bottom:-120,left:-80,pointerEvents:"none"}}/>
+      <div style={{position:"absolute",width:300,height:300,borderRadius:"50%",background:`radial-gradient(circle,${O},transparent 65%)`,opacity:0.07,filter:"blur(60px)",bottom:80,right:40,pointerEvents:"none"}}/>
+
+      {/* Horizontal light streak */}
+      <div style={{position:"absolute",top:"38%",left:0,right:0,height:1,background:`linear-gradient(90deg,transparent,rgba(242,101,34,0.25),transparent)`,pointerEvents:"none"}}/>
 
       {/* Logo */}
       <div style={{position:"absolute",top:24,left:0,right:0,display:"flex",justifyContent:"center"}}>
         <Logo src={imgs.logo}/>
       </div>
 
-      <div style={{textAlign:"center",animation:"fadeUp 0.8s ease both"}}>
-        {/* Mr. Mike */}
-        <div style={{position:"relative",width:120,height:120,margin:"0 auto 32px",display:"flex",alignItems:"center",justifyContent:"center"}}>
-          {[1,2].map(i=>(
-            <div key={i} style={{position:"absolute",inset:-i*18,borderRadius:"50%",border:`1.5px solid rgba(242,101,34,${0.22-i*0.07})`,animation:`ping ${1.6+i*0.5}s ease-out ${i*0.35}s infinite`}}/>
+      <div style={{textAlign:"center",animation:"fadeUp 0.8s ease both",position:"relative",zIndex:1}}>
+        {/* Mr. Mike with glow rings */}
+        <div style={{position:"relative",width:130,height:130,margin:"0 auto 32px",display:"flex",alignItems:"center",justifyContent:"center"}}>
+          {[1,2,3].map(i=>(
+            <div key={i} style={{position:"absolute",inset:-i*16,borderRadius:"50%",border:`1px solid rgba(242,101,34,${0.25-i*0.06})`,animation:`ping ${1.5+i*0.5}s ease-out ${i*0.3}s infinite`}}/>
           ))}
-          <div style={{width:120,height:120,borderRadius:"50%",overflow:"hidden",border:`3px solid ${O}`,boxShadow:`0 0 28px rgba(242,101,34,0.35)`,background:B,position:"relative",zIndex:1}}>
+          {/* Rotating arc */}
+          <svg style={{position:"absolute",inset:-8,animation:"rotateSlow 4s linear infinite"}} width={146} height={146} viewBox="0 0 146 146">
+            <circle cx="73" cy="73" r="68" fill="none" stroke={`url(#arcGrad)`} strokeWidth="1.5" strokeDasharray="120 320" strokeLinecap="round"/>
+            <defs>
+              <linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor={O} stopOpacity="0"/>
+                <stop offset="50%" stopColor={O} stopOpacity="1"/>
+                <stop offset="100%" stopColor={OL} stopOpacity="0"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div style={{width:130,height:130,borderRadius:"50%",overflow:"hidden",border:`2.5px solid ${O}`,boxShadow:`0 0 40px rgba(242,101,34,0.5), 0 0 80px rgba(242,101,34,0.2), inset 0 0 20px rgba(27,52,114,0.5)`,background:B,position:"relative",zIndex:1}}>
             {imgs.wave
               ? <img src={imgs.wave} alt="Mr. Mike" style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top center"}}/>
               : <div style={{fontSize:50,display:"flex",alignItems:"center",justifyContent:"center",height:"100%"}}>👋</div>
@@ -133,26 +149,35 @@ function TapToStart({ imgs, onStart }) {
           </div>
         </div>
 
-        {/* Main copy */}
-        <p style={{fontSize:15,color:G.muted,lineHeight:1.8,marginBottom:10,fontStyle:"italic",animation:"fadeUp 0.9s ease 0.1s both"}}>
-          Algunas decisiones cambian todo.<br/>
-          <span style={{color:"white",fontWeight:600,fontStyle:"normal"}}>Esta puede ser una de ellas.</span>
+        {/* Copy */}
+        <p style={{fontSize:15,color:"rgba(255,255,255,0.6)",lineHeight:1.8,marginBottom:8,fontStyle:"italic",animation:"fadeUp 0.9s ease 0.1s both"}}>
+          Algunas decisiones cambian todo.
+        </p>
+        <p style={{fontSize:16,color:"white",fontWeight:700,lineHeight:1.6,marginBottom:24,animation:"fadeUp 0.95s ease 0.15s both"}}>
+          Esta puede ser una de ellas.
         </p>
 
-        <h1 style={{fontSize:"clamp(28px,7vw,42px)",fontWeight:900,letterSpacing:"-1px",lineHeight:1.05,marginBottom:36,animation:"fadeUp 1s ease 0.2s both"}}>
-          SÉ{" "}
-          <span style={{background:`linear-gradient(135deg,${O},${OL})`,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>
+        <h1 style={{fontSize:"clamp(30px,8vw,46px)",fontWeight:900,letterSpacing:"-1.5px",lineHeight:1.0,marginBottom:40,animation:"fadeUp 1s ease 0.2s both",textShadow:"0 0 40px rgba(242,101,34,0.3)"}}>
+          <span style={{color:"white"}}>SÉ </span>
+          <span style={{background:`linear-gradient(135deg,${O},${OL},#FFB347)`,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",filter:"drop-shadow(0 0 20px rgba(242,101,34,0.6))"}}>
             AGENTE GNP
           </span>
         </h1>
 
-        {/* CTA */}
-        <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:12,animation:"fadeUp 1.1s ease 0.3s both"}}>
-          <div style={{width:64,height:64,borderRadius:"50%",background:`linear-gradient(135deg,${O},#C44D10)`,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:`0 0 28px rgba(242,101,34,0.45)`}}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
+        {/* CTA button */}
+        <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:14,animation:"fadeUp 1.1s ease 0.3s both"}}>
+          <div style={{
+            padding:"15px 40px", borderRadius:100,
+            background:`linear-gradient(135deg,${O},#C44D10)`,
+            boxShadow:`0 0 40px rgba(242,101,34,0.5), 0 0 80px rgba(242,101,34,0.2)`,
+            fontSize:16, fontWeight:800, color:"white", letterSpacing:"0.5px",
+            animation:"shimmer 2.5s ease infinite",
+            border:"1px solid rgba(255,180,100,0.3)",
+          }}>
+            Comenzar →
           </div>
-          <span style={{fontSize:13,fontWeight:600,color:G.dim,letterSpacing:"0.5px",animation:"blink 1.8s ease infinite"}}>
-            ¡Toca para comenzar!
+          <span style={{fontSize:10,color:G.dim,letterSpacing:"2px",textTransform:"uppercase",animation:"blink 2s ease infinite"}}>
+            Toca en cualquier lugar
           </span>
         </div>
       </div>
